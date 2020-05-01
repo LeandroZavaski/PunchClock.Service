@@ -2,22 +2,29 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>DelMazo.PointRecord.Service.Web</AssemblyName>
+    <RootNamespace>DelMazo.PointRecord.Service.Web</RootNamespace>
     <UserSecretsId>402d8150-36c3-404d-8927-0c8c1db50144</UserSecretsId>
     <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.2" />
+    <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
     <PackageReference Include="MediatR" Version="8.0.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.3" />
+    <PackageReference Include="Microsoft.OpenApi" Version="1.1.4" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.10" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.4.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
   </ItemGroup>
 
   <ItemGroup>

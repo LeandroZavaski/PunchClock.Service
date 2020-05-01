@@ -2,10 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>DelMazo.PointRecord.Service.Domain</AssemblyName>
+    <RootNamespace>DelMazo.PointRecord.Service.Domain</RootNamespace>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="Entities\" />
-  </ItemGroup>
 
 </Project>

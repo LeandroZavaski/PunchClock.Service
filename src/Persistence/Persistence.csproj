@@ -2,11 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>DelMazo.PointRecord.Service.Persistence</AssemblyName>
+    <RootNamespace>DelMazo.PointRecord.Service.Persistence</RootNamespace>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
