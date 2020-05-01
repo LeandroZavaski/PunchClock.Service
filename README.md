@@ -1,1 +1,0 @@
-# DelMazo.PointRecord.Service
