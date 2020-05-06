@@ -7,8 +7,8 @@ namespace DelMazo.PointRecord.Service.Web.Validators.v1.PointRecord
     {
         public LoginValidator()
         {
-            RuleFor(p => p.Document).NotNull().NotEmpty().WithMessage("O numero de documento deve ser informado");
-            RuleFor(p => p.Password).NotNull().NotEmpty().WithMessage("A senha deve ser informada");
+            RuleFor(p => p.Document).NotNull().NotEmpty().MaximumLength(11); ;
+            RuleFor(p => p.Password).NotNull().NotEmpty();
         }
     }
 }

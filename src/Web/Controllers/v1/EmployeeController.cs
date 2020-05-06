@@ -1,19 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using DelMazo.PointRecord.Service.Application.Commands.PointRecord;
+using DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace DelMazo.PointRecord.Service.Web.Controllers.v1
 {
-    [Route("/v1/[controller]"), Authorize]
+    [ApiController]
+    [ApiVersionNeutral]
+    [Route("/v1/[controller]")]
+    [Produces("application/json")]
+    //[Authorize]
     public class EmployeeController : Controller
     {
-        [HttpGet]
-        public IActionResult Index()
+        private readonly IMediator _mediator;
+
+        public EmployeeController(IMediator mediator)
         {
-            return View();
+            _mediator = mediator;
+        }
+
+        [ProducesResponseType(200)]     // Ok
+        [ProducesResponseType(400)]     // BadRequest
+        [HttpPost]
+        [Route("PunchClock")]
+        public async Task<ActionResult> Post([FromBody] PunchClockRequest punchClock)
+        {
+            var response = await _mediator.Send(new WritePunchClockCommand(punchClock));
+
+            if (!response)
+                return BadRequest();
+
+            return Ok();
         }
     }
 }

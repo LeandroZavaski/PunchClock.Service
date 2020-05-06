@@ -2,12 +2,15 @@
 using DelMazo.PointRecord.Service.Persistence.Entities;
 using DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace DelMazo.PointRecord.Service.Web.Controllers.v1
 {
+    [ApiController]
+    [ApiVersion("1")]
     [Route("/v1/[controller]")]
+    [Produces("application/json")]
     //[Authorize]
     public class LoginController : Controller
     {
@@ -19,16 +22,16 @@ namespace DelMazo.PointRecord.Service.Web.Controllers.v1
         }
 
         [ProducesResponseType(typeof(LoginResponse), 200)]     // Ok
-        [ProducesResponseType(400)]                               // BadRequest
+        [ProducesResponseType(400)]                            // BadRequest
         [HttpGet]
-        public ActionResult Get([FromQuery] LoginRequest user)
+        public async Task<ActionResult> GetAsync([FromQuery] LoginRequest user)
         {
-            var users = _mediator.Send(new GetUserLoginQuery(user));
+            var response = await _mediator.Send(new ReadUserLoginQuery(user));
 
-            if (user is null)
+            if (response is null)
                 return BadRequest();
 
-            return Ok();
+            return Ok(response);
         }
     }
 }

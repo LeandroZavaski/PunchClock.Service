@@ -17,7 +17,14 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Web": {
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/v1/user",
+      "publishAllPorts": true,
+      "useSSL": true
+    },
+    "DelMazo.PointRecord.Service.Web": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger/index.html",
@@ -25,13 +32,6 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://localhost:5000/"
-    },
-    "Docker": {
-      "commandName": "Docker",
-      "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/v1/user",
-      "publishAllPorts": true,
-      "useSSL": true
     }
   }
 }

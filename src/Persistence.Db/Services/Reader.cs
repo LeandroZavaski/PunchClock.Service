@@ -14,18 +14,17 @@ namespace DelMazo.PointRecord.Service.PersistenceDb.Services
     public class Reader : IReader
     {
         private readonly PointRecordContext _context;
-        private readonly IMapper _mapper;
 
-        public Reader(PointRecordContext context, IMapper mapper)
+        public Reader(PointRecordContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
-        public Task<LoginResponse> GetUserLogin(Login login)
+        public async Task<LoginResponse> GetUserLogin(Login login)
         {
             var response = _context.Login.Where(w => w.Document.Equals(login.Document) && w.Password.Equals(login.Password)).FirstOrDefault();
-            return _mapper.Map<Task<LoginResponse>>(response);
+            return response;
+
         }
     }
 }

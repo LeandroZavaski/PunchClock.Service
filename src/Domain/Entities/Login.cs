@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DelMazo.PointRecord.Service.Domain.Entities
 {
-    public class Login
+    public class Login : BaseUser
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        public string Document { get; set; }
         public string Password { get; set; }
     }
 }

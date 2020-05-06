@@ -10,18 +10,18 @@ using System.Threading.Tasks;
 
 namespace DelMazo.PointRecord.Service.Application.QuerysHandlers.PointRecord
 {
-    public class GetUserLoginQueryHandler : IRequestHandler<GetUserLoginQuery, LoginResponse>
+    public class ReadUserLoginHandler : IRequestHandler<ReadUserLoginQuery, LoginResponse>
     {
         private readonly IReader _readRepository;
 
-        public GetUserLoginQueryHandler(IReader readRepository)
+        public ReadUserLoginHandler(IReader readRepository)
         {
             _readRepository = readRepository;
         }
 
-        public Task<LoginResponse> Handle(GetUserLoginQuery request, CancellationToken cancellationToken)
+        public async Task<LoginResponse> Handle(ReadUserLoginQuery request, CancellationToken cancellationToken)
         {
-            return _readRepository.GetUserLogin(request.Login);
+            return await _readRepository.GetUserLogin(request.Login);
         }
     }
 }

@@ -1,8 +1,9 @@
-using AutoMapper;
+using DelMazo.PointRecord.Service.Application.Commands.PointRecord;
 using DelMazo.PointRecord.Service.Application.Querys.PointRecord;
 using DelMazo.PointRecord.Service.Persistence.Interfaces;
 using DelMazo.PointRecord.Service.PersistenceDb.Context;
 using DelMazo.PointRecord.Service.PersistenceDb.Services;
+using DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request;
 using DelMazo.PointRecord.Service.Web.Validators.v1.PointRecord;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -13,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Linq;
@@ -34,7 +36,11 @@ namespace DelMazo.PointRecord.Service.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers()
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginValidator>());
+                .AddFluentValidation(opt =>
+                {
+                    opt.RegisterValidatorsFromAssemblyContaining<LoginValidator>();
+                    opt.RegisterValidatorsFromAssemblyContaining<PunchClockValidator>();
+                });
 
             services.AddApiVersioning();
 
@@ -101,16 +107,22 @@ namespace DelMazo.PointRecord.Service.Web
             //Database
             services.AddDbContext<PointRecordContext>(options => options.UseMySQL(Configuration["ConnectionStrings:DefaultConnection"]));
 
-            //AutoMapper
-            services.AddAutoMapper(typeof(Startup));
-
             //Register Commands
-            services.AddMediatR(typeof(GetUserLoginQuery).GetTypeInfo().Assembly);
+            services.AddMediatR(typeof(ReadUserLoginQuery).GetTypeInfo().Assembly);
+            services.AddMediatR(typeof(WritePunchClockCommand).GetTypeInfo().Assembly);
 
             //Register Handlers
             services.AddTransient<IReader, Reader>();
             services.AddTransient<IWrite, Write>();
             services.AddTransient<IRemove, Remove>();
+
+            //Logger
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddConsole();
+                loggingBuilder.AddEventLog();
+                loggingBuilder.AddDebug();
+            });
 
         }
 

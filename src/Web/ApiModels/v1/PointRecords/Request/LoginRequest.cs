@@ -1,14 +1,11 @@
 ﻿using DelMazo.PointRecord.Service.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request
 {
-    public class LoginRequest
+    public class LoginRequest : BaseUserRequest
     {
-        public string Document { get; set; }
+        [BindRequired]
         public string Password { get; set; }
 
         public static implicit operator Login(LoginRequest prop)
