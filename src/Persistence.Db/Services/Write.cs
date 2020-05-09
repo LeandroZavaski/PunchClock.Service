@@ -11,9 +11,9 @@ namespace DelMazo.PointRecord.Service.PersistenceDb.Services
     public class Write : IWrite
     {
         private readonly ILogger<Write> _logger;
-        private readonly PointRecordContext _context;
+        private readonly DataContext _context;
 
-        public Write(ILogger<Write> logger, PointRecordContext context)
+        public Write(ILogger<Write> logger, DataContext context)
         {
             _logger = logger;
             _context = context;
@@ -26,52 +26,63 @@ namespace DelMazo.PointRecord.Service.PersistenceDb.Services
             var punche = new PunchClock();
             var todayDate = DateTime.Now.Date.ToString("yyyy-MM-dd");
 
-            try
-            {
-                var verifyExist = _context.PunchClock
-                    .Where(w => w.Id.Equals(punchClock.Id) && w.Document.Equals(punchClock.Document))
-                    .Select(a => a.StartWork).Where(w => w.Value.Date.ToString("yyyy-MM-dd").Equals(todayDate)).Take(1) == null;
+            //try
+            //{
+            //    var verifyExist = _context.PunchClock
+            //        .Where(w => w.Id.Equals(punchClock.Id) && w.Document.Equals(punchClock.Document))
+            //        .Select(a => a.StartWork).Where(w => w.Value.Date.ToString("yyyy-MM-dd").Equals(todayDate)).Take(1) == null;
 
-                if (verifyExist)
-                {
-                    punche = new PunchClock
-                    {
-                        Document = punchClock.Document,
-                        StartWork = DateTime.Now
-                    };
-                }
-                else
-                {
-                    var veryfyRegister = _context.PunchClock.OrderByDescending(o => o.Id.Equals(punchClock.Id) && o.StartWork.Equals(DateTime.Now.ToString("yyyy-MM-dd"))).FirstOrDefault();
+            //    if (verifyExist)
+            //    {
+            //        punche = new PunchClock
+            //        {
+            //            Document = punchClock.Document,
+            //            StartWork = DateTime.Now
+            //        };
+            //    }
+            //    else
+            //    {
+            //        var veryfyRegister = _context.PunchClock.OrderByDescending(o => o.Id.Equals(punchClock.Id) && o.StartWork.Equals(DateTime.Now.ToString("yyyy-MM-dd"))).FirstOrDefault();
 
-                    if (veryfyRegister == null)
-                    {
-                        punche = new PunchClock
-                        {
-                            Document = punchClock.Document,
-                            StartWork = DateTime.Now
-                        };
-                    }
-                    else
-                    {
-                        punche = new PunchClock
-                        {
-                            Document = punchClock.Document,
-                            FinishWork = DateTime.Now
-                        };
-                    }
-                }
+            //        if (veryfyRegister == null)
+            //        {
+            //            punche = new PunchClock
+            //            {
+            //                Document = punchClock.Document,
+            //                StartWork = DateTime.Now
+            //            };
+            //        }
+            //        else
+            //        {
+            //            punche = new PunchClock
+            //            {
+            //                Document = punchClock.Document,
+            //                FinishWork = DateTime.Now
+            //            };
+            //        }
+            //    }
 
-                _context.PunchClock.Add(punche);
-                await _context.SaveChangesAsync();
+            //    _context.PunchClock.Add(punche);
+            //    await _context.SaveChangesAsync();
 
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation("Não foi possivel inserir o registro no banco: {0}", ex.Message);
-                return false;
-            }
+            //    return true;
+            //}
+            //catch (Exception ex)
+            //{
+            //    _logger.LogInformation("Não foi possivel inserir o registro no banco: {0}", ex.Message);
+            //    return false;
+            //}
+
+            return true;
+        }
+
+        public async Task<bool> WriteUserAsync(User user)
+        {
+            _logger.LogInformation("Start load customer userId: ", user.Id);
+
+            var response = await _context.Add(user, "Users");
+
+            return response;
         }
     }
 }

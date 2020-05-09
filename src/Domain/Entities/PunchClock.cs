@@ -1,11 +1,20 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
+using System.Collections.Generic;
 
 namespace DelMazo.PointRecord.Service.Domain.Entities
 {
-    public class PunchClock : BaseUser
+    public partial class PunchClock
     {
-        public DateTime? StartWork { get; set; } = null;
-        public DateTime? FinishWork { get; set; } = null;
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public int Id { get; set; }
+        [BsonElement]
+        public string Document { get; set; }
+        [BsonElement]
+        public DateTime? StartWork { get; set; }
+        [BsonElement]
+        public DateTime? FinishWork { get; set; }
     }
 }

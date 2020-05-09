@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DelMazo.PointRecord.Service.Domain.Entities
 {
     public class Auth
     {
-        public string Username { get; set; }
+        [BsonId]
+        public string Id { get; set; }
+
+        [BsonElement]
+        public string Document { get; set; }
+
+        [BsonElement]
         public string Password { get; set; }
+
+        [NotMapped]
+        public string Token { get; set; }
     }
 }

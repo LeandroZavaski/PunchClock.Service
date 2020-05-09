@@ -4,11 +4,11 @@ using MediatR;
 
 namespace DelMazo.PointRecord.Service.Application.Querys.PointRecord
 {
-    public class ReadUserLoginQuery : IRequest<LoginResponse>
+    public class ReadAuthQuery : IRequest<AuthResponse>
     {
-        public Login Login { get; set; }
+        public Auth Login { get; set; }
 
-        public ReadUserLoginQuery(Login login)
+        public ReadAuthQuery(Auth login)
         {
             Login = login;
         }

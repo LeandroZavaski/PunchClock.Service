@@ -3,14 +3,12 @@ using DelMazo.PointRecord.Service.Application.Querys.PointRecord;
 using DelMazo.PointRecord.Service.Persistence.Interfaces;
 using DelMazo.PointRecord.Service.PersistenceDb.Context;
 using DelMazo.PointRecord.Service.PersistenceDb.Services;
-using DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request;
 using DelMazo.PointRecord.Service.Web.Validators.v1.PointRecord;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -20,29 +18,39 @@ using Microsoft.OpenApi.Models;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DelMazo.PointRecord.Service.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        private readonly IWebHostEnvironment _env;
+        private readonly IConfiguration _configuration;
 
-        public IConfiguration Configuration { get; }
+        public Startup(IWebHostEnvironment env, IConfiguration configuration)
+        {
+            _env = env;
+            _configuration = configuration;
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers()
+            services.AddMvc()
                 .AddFluentValidation(opt =>
                 {
-                    opt.RegisterValidatorsFromAssemblyContaining<LoginValidator>();
                     opt.RegisterValidatorsFromAssemblyContaining<PunchClockValidator>();
                 });
 
+            services.AddTransient<DataContext>();
+
+            services.AddCors();
+            services.AddControllers();
             services.AddApiVersioning();
+
+            // configure strongly typed settings objects
+            var appSettingsSection = _configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
 
             //Swagger
             services.AddSwaggerGen(c =>
@@ -85,30 +93,44 @@ namespace DelMazo.PointRecord.Service.Web
                 });
             });
 
-            services.AddAuthentication(option =>
+            // configure jwt authentication
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            services.AddAuthentication(x =>
             {
-                option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
-            }).AddJwtBearer(options =>
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
             {
-                options.TokenValidationParameters = new TokenValidationParameters
+                x.Events = new JwtBearerEvents
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = false,
+                    OnTokenValidated = context =>
+                    {
+                        var userService = context.HttpContext.RequestServices.GetRequiredService<IReader>();
+                        var userId = int.Parse(context.Principal.Identity.Name);
+                        var user = userService.GetById(userId);
+                        if (user == null)
+                        {
+                            // return unauthorized if user no longer exists
+                            context.Fail("Unauthorized");
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = Configuration["JwtToken:Issuer"],
-                    ValidAudience = Configuration["JwtToken:Issuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtToken:SecretKey"])) //Configuration["JwtToken:SecretKey"]
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
                 };
             });
 
-            //Database
-            services.AddDbContext<PointRecordContext>(options => options.UseMySQL(Configuration["ConnectionStrings:DefaultConnection"]));
-
             //Register Commands
-            services.AddMediatR(typeof(ReadUserLoginQuery).GetTypeInfo().Assembly);
+            services.AddMediatR(typeof(ReadAuthQuery).GetTypeInfo().Assembly);
             services.AddMediatR(typeof(WritePunchClockCommand).GetTypeInfo().Assembly);
 
             //Register Handlers

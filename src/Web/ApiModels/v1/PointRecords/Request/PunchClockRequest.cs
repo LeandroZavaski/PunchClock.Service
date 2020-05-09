@@ -1,19 +1,17 @@
 ﻿using DelMazo.PointRecord.Service.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request
 {
-    public class PunchClockRequest : BaseUserRequest
+    public class PunchClockRequest
     {
+        [JsonProperty("cpf")]
+        public string Document { get; set; }
+
         public static implicit operator PunchClock(PunchClockRequest prop)
         {
             return prop is null ? null : new PunchClock()
             {
-                Id = prop.Id,
                 Document = prop.Document
             };
         }

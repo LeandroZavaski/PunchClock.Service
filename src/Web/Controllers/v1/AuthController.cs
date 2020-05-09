@@ -1,64 +1,37 @@
-﻿using DelMazo.PointRecord.Service.Domain.Entities;
-using Microsoft.AspNetCore.Authorization;
+﻿using DelMazo.PointRecord.Service.Application.Querys.PointRecord;
+using DelMazo.PointRecord.Service.Persistence.Entities;
+using DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace DelMazo.PointRecord.Service.Web.Controllers.v1
 {
+    [ApiController]
+    [ApiVersionNeutral]
     [Route("/v1/[controller]")]
+    [Produces("application/json")]
+    //[Authorize]
     public class AuthController : Controller
     {
-        private readonly IConfiguration _config;
+        private readonly IMediator _mediator;
 
-        public AuthController(IConfiguration config)
+        public AuthController(IMediator mediator)
         {
-            _config = config;
+            _mediator = mediator;
         }
 
-        [AllowAnonymous]
-        [HttpPost]
-        public IActionResult CreateToken([FromBody]Auth login)
+        [ProducesResponseType(typeof(AuthResponse), 200)]     // Ok
+        [ProducesResponseType(400)]                            // BadRequest
+        [HttpGet]
+        public async Task<ActionResult> GetAsync([FromQuery] AuthRequest login)
         {
-            if (login == null) return Unauthorized();
-            bool validUser = Authenticate(login);
-            string tokenString;
-            if (validUser)
-            {
-                tokenString = BuildToken();
-            }
-            else
-            {
-                return Unauthorized();
-            }
-            return Ok(new { Token = tokenString });
-        }
+            var response = await _mediator.Send(new ReadAuthQuery(login));
 
-        private string BuildToken()
-        {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtToken:SecretKey"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+            if (response is null)
+                return BadRequest();
 
-            var token = new JwtSecurityToken(_config["JwtToken:Issuer"],
-              _config["JwtToken:Issuer"],
-              expires: DateTime.Now.AddMinutes(30),
-              signingCredentials: creds);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        private bool Authenticate(Auth login)
-        {
-            bool validUser = false;
-
-            if (login.Username == _config["JwtToken:Username"] && login.Password == _config["JwtToken:Password"])
-            {
-                validUser = true;
-            }
-            return validUser;
+            return Ok(response);
         }
     }
 }

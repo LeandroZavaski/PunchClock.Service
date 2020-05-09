@@ -2,26 +2,23 @@
 using DelMazo.PointRecord.Service.Persistence.Entities;
 using DelMazo.PointRecord.Service.Persistence.Interfaces;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DelMazo.PointRecord.Service.Application.QuerysHandlers.PointRecord
 {
-    public class ReadUserLoginHandler : IRequestHandler<ReadUserLoginQuery, LoginResponse>
+    public class ReadAuthHandler : IRequestHandler<ReadAuthQuery, AuthResponse>
     {
         private readonly IReader _readRepository;
 
-        public ReadUserLoginHandler(IReader readRepository)
+        public ReadAuthHandler(IReader readRepository)
         {
             _readRepository = readRepository;
         }
 
-        public async Task<LoginResponse> Handle(ReadUserLoginQuery request, CancellationToken cancellationToken)
+        public async Task<AuthResponse> Handle(ReadAuthQuery request, CancellationToken cancellationToken)
         {
-            return await _readRepository.GetUserLogin(request.Login);
+            return await _readRepository.GetAuthLogin(request.Login);
         }
     }
 }

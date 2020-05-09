@@ -7,8 +7,7 @@ namespace DelMazo.PointRecord.Service.Web.Validators.v1.PointRecord
     {
         public PunchClockValidator()
         {
-            RuleFor(p => p.Id).NotNull().NotEmpty();
-            RuleFor(p => p.Document).NotNull().NotEmpty();
+            RuleFor(p => p.Document).NotNull().NotEmpty().Length(11, 11).OverridePropertyName("cpf");
         }
     }
 }
