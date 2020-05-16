@@ -1,11 +1,9 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using DelMazo.PointRecord.Service.Persistence.Entities;
+using MediatR;
 
 namespace DelMazo.PointRecord.Service.Application.Querys.PointRecord
 {
-    public class ReadUserByIdQuery : IRequest<bool>
+    public class ReadUserByIdQuery : IRequest<UserResponse>
     {
         public string Id { get; set; }
 

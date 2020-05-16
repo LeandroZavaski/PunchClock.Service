@@ -1,9 +1,10 @@
 ﻿using DelMazo.PointRecord.Service.Domain.Entities;
+using DelMazo.PointRecord.Service.Persistence.Entities;
 using DelMazo.PointRecord.Service.Persistence.Interfaces;
 using DelMazo.PointRecord.Service.PersistenceDb.Context;
+using DelMazo.PointRecord.Service.PersistenceDb.Enums;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DelMazo.PointRecord.Service.PersistenceDb.Services
@@ -76,13 +77,52 @@ namespace DelMazo.PointRecord.Service.PersistenceDb.Services
             return true;
         }
 
-        public async Task<bool> WriteUserAsync(User user)
+        public async Task<UserResponse> WriteUserAsync(User user)
         {
             _logger.LogInformation("Start load customer userId: ", user.Id);
+            var response = new User();
 
-            var response = await _context.Add(user, "Users");
+            try
+            {
+                foreach (var collection in user.Collections)
+                {
+                    if (collection.Description.Equals(ColllectionsEnum.Users.ToString()))
+                    {
+                        //Load user
+                        response = await _context.Add(user, user.Id, collection.Description);
+                    }
+                    else
+                    {
+                        //Load login Auth
+                        await _context.Add(user.Auth, user.Id, collection.Description);
+                    }
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex.Message, $"Not was possible load data userId: {user.Id}");
+                return null;
+            }
 
-            return response;
+        }
+
+        public async Task<UserResponse> WriteUserUpdateAsync(User user, string id)
+        {
+            _logger.LogInformation("Start update customer userId: ", id);
+
+            try
+            {
+                //Update user
+                user.Id = id;
+                var response = await _context.Update(user, id, ColllectionsEnum.Users.ToString());
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex.Message, $"Not was possible update data userId: {id}");
+                return null;
+            }
         }
     }
 }

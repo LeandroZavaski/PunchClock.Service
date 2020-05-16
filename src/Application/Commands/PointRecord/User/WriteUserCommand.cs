@@ -1,12 +1,10 @@
 ﻿using DelMazo.PointRecord.Service.Domain.Entities;
+using DelMazo.PointRecord.Service.Persistence.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DelMazo.PointRecord.Service.Application.Commands.PointRecord
 {
-    public class WriteUserCommand : IRequest<bool>
+    public class WriteUserCommand : IRequest<UserResponse>
     {
         public User User { get; set; }
 

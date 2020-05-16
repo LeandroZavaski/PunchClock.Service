@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
+using System.Collections.Generic;
 
 namespace DelMazo.PointRecord.Service.Domain.Entities
 {
@@ -52,5 +53,7 @@ namespace DelMazo.PointRecord.Service.Domain.Entities
         
         [BsonElement]
         public Auth Auth { get; set; }
+
+        public IEnumerable<Collections> Collections { get; set; }
     }
 }

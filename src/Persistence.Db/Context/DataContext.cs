@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,7 +11,6 @@ namespace DelMazo.PointRecord.Service.PersistenceDb.Context
         protected readonly IConfiguration _configuration;
         private MongoClient _client;
         private IMongoDatabase _db;
-        // private readonly IMongoCollection<T> _data;
 
         public DataContext(IConfiguration configuration)
         {
@@ -19,41 +19,43 @@ namespace DelMazo.PointRecord.Service.PersistenceDb.Context
             _db = _client.GetDatabase(_configuration.GetConnectionString("DatabaseName"));
         }
 
-        public async Task<bool> Add<T>(T data, string collection)
+        public async Task<T> Add<T>(T data, string id, string collection)
         {
-            var cotacoes = _db.GetCollection<T>(collection);
-            cotacoes.InsertOne(data);
-            return true;
+            var _collection = _db.GetCollection<T>(collection);
+            await _collection.InsertOneAsync(data);
+            return await _collection.Find(Builders<T>.Filter.Eq("_id", id)).FirstOrDefaultAsync();
         }
 
         public void AddRange<T>(IEnumerable<T> generic, string collection)
         {
-            var cotacoes = _db.GetCollection<T>(collection);
-            cotacoes.InsertMany(generic);
+            var _collection = _db.GetCollection<T>(collection);
+            _collection.InsertMany(generic);
         }
 
-        public IEnumerable<T> GetAll<T>(string collection)
+        public async Task<IEnumerable<T>> GetAll<T>(string collection)
         {
-            var cotacoes = _db.GetCollection<T>(collection);
-            return cotacoes.Find<T>(data => true).ToList();
+            var _collection = _db.GetCollection<T>(collection);
+            return await _collection.FindAsync<T>(data => true).Result.ToListAsync();
         }
 
-        //public T GetById<T>(T generic, string id, string collection)
-        //{
-        //    var cotacoes = _db.GetCollection<T>(collection);
-        //    return cotacoes.Find<T>(Collection => Collection.Id == id).FirstOrDefault();
-        //}
+        public async Task<T> GetById<T>(string id, string collection)
+        {
+            var _collection = _db.GetCollection<T>(collection);
+            return await _collection.Find(Builders<T>.Filter.Eq("_id", id)).FirstOrDefaultAsync();
+        }
 
-        //public void Update<T>(T generic, string id, string collection)
-        //{
-        //    var cotacoes = _db.GetCollection<T>(collection);
-        //    cotacoes.ReplaceOne(data => data.Id == id, generic);
-        //}
+        public async Task<T> Update<T>(T generic, string id, string collection)
+        {
+            var _collection = _db.GetCollection<T>(collection);
+            await _collection.ReplaceOneAsync(Builders<T>.Filter.Eq("_id", id), generic);
+            return await _collection.Find(Builders<T>.Filter.Eq("_id", id)).FirstOrDefaultAsync();
+        }
 
-        //public void Remove<T>(string id, string collection)
-        //{
-        //    var cotacoes = _db.GetCollection<T>(collection);
-        //    cotacoes.DeleteOne(data => data.Id == id);
-        //}
+        public async Task<T> Remove<T>(string id, string collection)
+        {
+            var _collection = _db.GetCollection<T>(collection);
+            await _collection.FindOneAndDeleteAsync(Builders<T>.Filter.Eq("_id", id));
+            return await _collection.Find(Builders<T>.Filter.Eq("_id", id)).FirstOrDefaultAsync();
+        }
     }
 }

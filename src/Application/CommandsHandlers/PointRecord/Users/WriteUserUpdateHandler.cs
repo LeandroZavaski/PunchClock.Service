@@ -1,4 +1,5 @@
 ﻿using DelMazo.PointRecord.Service.Application.Commands.PointRecord;
+using DelMazo.PointRecord.Service.Persistence.Entities;
 using DelMazo.PointRecord.Service.Persistence.Interfaces;
 using MediatR;
 using System;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DelMazo.PointRecord.Service.Application.CommandsHandlers.PointRecord.Users
 {
-    public class WriteUserUpdateHandler : IRequestHandler<WriteUserUpdateCommand, bool>
+    public class WriteUserUpdateHandler : IRequestHandler<WriteUserUpdateCommand, UserResponse>
     {
         private readonly IWrite _writeRepository;
 
@@ -16,9 +17,10 @@ namespace DelMazo.PointRecord.Service.Application.CommandsHandlers.PointRecord.U
             _writeRepository = writeRepository;
         }
 
-        public async Task<bool> Handle(WriteUserUpdateCommand request, CancellationToken cancellationToken)
+        public async Task<UserResponse> Handle(WriteUserUpdateCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var response = await _writeRepository.WriteUserUpdateAsync(request.User, request.Id);
+            return response;
         }
     }
 }

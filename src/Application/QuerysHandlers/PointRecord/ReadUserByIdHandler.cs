@@ -1,4 +1,5 @@
 ﻿using DelMazo.PointRecord.Service.Application.Querys.PointRecord;
+using DelMazo.PointRecord.Service.Persistence.Entities;
 using DelMazo.PointRecord.Service.Persistence.Interfaces;
 using MediatR;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DelMazo.PointRecord.Service.Application.QuerysHandlers.PointRecord
 {
-    public class ReadUserByIdHandler : IRequestHandler<ReadUserByIdQuery, bool>
+    public class ReadUserByIdHandler : IRequestHandler<ReadUserByIdQuery, UserResponse>
     {
         private readonly IReader _readRepository;
 
@@ -18,9 +19,10 @@ namespace DelMazo.PointRecord.Service.Application.QuerysHandlers.PointRecord
             _readRepository = readRepository;
         }
 
-        public async Task<bool> Handle(ReadUserByIdQuery request, CancellationToken cancellationToken)
+        public async Task<UserResponse> Handle(ReadUserByIdQuery request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var response = await _readRepository.GetById(request.Id);
+            return response;
         }
     }
 }

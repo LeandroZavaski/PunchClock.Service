@@ -1,11 +1,20 @@
-﻿using DelMazo.PointRecord.Service.Domain.Entities;
+﻿using DelMazo.PointRecord.Service.Application.Helpers;
+using DelMazo.PointRecord.Service.Domain.Entities;
+using DelMazo.PointRecord.Service.PersistenceDb.Enums;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request
 {
     public class UserRequest
     {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Id { get; set; } = Convert.ToString(Guid.NewGuid());
+
+        [JsonProperty("matricula")]
+        public string Registration { get; set; }
+
         [JsonProperty("nome")]
         public string Name { get; set; }
 
@@ -42,11 +51,15 @@ namespace DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request
         [JsonProperty("funcao")]
         public RoleRequest RoleRequest { get; set; }
 
+        [System.Text.Json.Serialization.JsonIgnore]
+        public IEnumerable<Collections> Collections { get; set; }
+
+
         public static implicit operator User(UserRequest prop)
         {
             return prop is null ? null : new User()
             {
-                Id = Convert.ToString(Guid.NewGuid()),
+                Id = prop.Id,
                 Name = prop.Name,
                 BirthDate = prop.BirthDate,
                 Phone = prop.Phone,
@@ -58,6 +71,7 @@ namespace DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request
                 StartDate = prop.StartDate,
                 FinishDate = prop.FinishDate,
                 Active = prop.Active,
+                Registration = prop.Registration,
                 Role = new Role
                 {
                     Id = prop.RoleRequest.Id,
@@ -66,9 +80,14 @@ namespace DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request
                 },
                 Auth = new Auth
                 {
-                    Id = Convert.ToString(Guid.NewGuid()),
+                    Id = prop.Id,
                     Document = prop.DocumentCpf,
-                    Password = prop.DocumentCpf
+                    Password = PointRecordHasshPass.Encrypt(prop.DocumentCpf)
+                },
+                Collections = new List<Collections>
+                {
+                    new Collections{ Description = ColllectionsEnum.Users.ToString() },
+                    new Collections{ Description = ColllectionsEnum.Auths.ToString() },
                 }
             };
         }

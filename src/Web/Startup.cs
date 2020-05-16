@@ -108,7 +108,7 @@ namespace DelMazo.PointRecord.Service.Web
                     OnTokenValidated = context =>
                     {
                         var userService = context.HttpContext.RequestServices.GetRequiredService<IReader>();
-                        var userId = int.Parse(context.Principal.Identity.Name);
+                        var userId = context.Principal.Identity.Name;
                         var user = userService.GetById(userId);
                         if (user == null)
                         {

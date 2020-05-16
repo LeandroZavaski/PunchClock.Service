@@ -1,15 +1,13 @@
 ﻿using DelMazo.PointRecord.Service.Application.Commands.PointRecord;
+using DelMazo.PointRecord.Service.Persistence.Entities;
 using DelMazo.PointRecord.Service.Persistence.Interfaces;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DelMazo.PointRecord.Service.Application.CommandsHandlers.PointRecord.Users
 {
-    public class RemoveUserByIdHandler : IRequestHandler<RemoveUserByIdCommand, bool>
+    public class RemoveUserByIdHandler : IRequestHandler<RemoveUserByIdCommand, UserResponse>
     {
         private readonly IRemove _removeRepository;
 
@@ -18,9 +16,10 @@ namespace DelMazo.PointRecord.Service.Application.CommandsHandlers.PointRecord.U
             _removeRepository = removeRepository;
         }
 
-        public async Task<bool> Handle(RemoveUserByIdCommand request, CancellationToken cancellationToken)
+        public async Task<UserResponse> Handle(RemoveUserByIdCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var response = await _removeRepository.RemoveUserByIdAsync(request.Id);
+            return response;
         }
     }
 }

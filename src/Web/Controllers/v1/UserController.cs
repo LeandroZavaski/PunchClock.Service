@@ -1,5 +1,6 @@
 ﻿using DelMazo.PointRecord.Service.Application.Commands.PointRecord;
 using DelMazo.PointRecord.Service.Application.Querys.PointRecord;
+using DelMazo.PointRecord.Service.Persistence.Entities;
 using DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -21,20 +22,20 @@ namespace DelMazo.PointRecord.Service.Web.Controllers.v1
             _mediator = mediator;
         }
 
-        [ProducesResponseType(200)]     // Ok
+        [ProducesResponseType(typeof(UserResponse), 200)]     // Ok
         [ProducesResponseType(400)]     // BadRequest
         [HttpGet]
         public async Task<ActionResult> Get()
         {
             var response = await _mediator.Send(new ReadUsersQuery());
 
-            if (!response)
+            if (response is null)
                 return BadRequest();
 
-            return Ok();
+            return Ok(response);
         }
 
-        [ProducesResponseType(200)]     // Ok
+        [ProducesResponseType(typeof(UserResponse), 200)]     // Ok
         [ProducesResponseType(400)]     // BadRequest
         [HttpGet]
         [Route("{id}")]
@@ -42,10 +43,10 @@ namespace DelMazo.PointRecord.Service.Web.Controllers.v1
         {
             var response = await _mediator.Send(new ReadUserByIdQuery(id));
 
-            if (!response)
+            if (response is null)
                 return BadRequest();
 
-            return Ok();
+            return Ok(response);
         }
 
         [ProducesResponseType(200)]     // Ok
@@ -55,25 +56,10 @@ namespace DelMazo.PointRecord.Service.Web.Controllers.v1
         {
             var response = await _mediator.Send(new WriteUserCommand(user));
 
-            if (!response)
+            if (response is null)
                 return BadRequest();
 
-            return Ok();
-        }
-
-
-        [ProducesResponseType(200)]     // Ok
-        [ProducesResponseType(400)]     // BadRequest
-        [HttpPut]
-        [Route("{id}")]
-        public async Task<ActionResult> Put(string id)
-        {
-            var response = await _mediator.Send(new WriteUserUpdateByIdCommand(id));
-
-            if (!response)
-                return BadRequest();
-
-            return Ok();
+            return Ok(response.Id);
         }
 
         [ProducesResponseType(200)]     // Ok
@@ -84,10 +70,10 @@ namespace DelMazo.PointRecord.Service.Web.Controllers.v1
         {
             var response = await _mediator.Send(new WriteUserUpdateCommand(user, id));
 
-            if (!response)
+            if (response is null)
                 return BadRequest();
 
-            return Ok();
+            return Ok(response);
         }
 
         [ProducesResponseType(200)]     // Ok
@@ -98,25 +84,10 @@ namespace DelMazo.PointRecord.Service.Web.Controllers.v1
         {
             var response = await _mediator.Send(new RemoveUserByIdCommand(id));
 
-            if (!response)
+            if (!(response is null))
                 return BadRequest();
 
-            return Ok();
-        }
-
-        [ProducesResponseType(200)]     // Ok
-        [ProducesResponseType(400)]     // BadRequest
-        [HttpDelete]
-        [Route("{id}/user")]
-        // POST: User/Delete/5
-        public async Task<ActionResult> Delete(string id, [FromBody]UserRequest user)
-        {
-            var response = await _mediator.Send(new RemoveUserCommand(user, id));
-
-            if (!response)
-                return BadRequest();
-
-            return Ok();
+            return Ok(response);
         }
     }
 }
