@@ -82,7 +82,8 @@ namespace DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request
                 {
                     Id = prop.Id,
                     Document = prop.DocumentCpf,
-                    Password = PointRecordHasshPass.Encrypt(prop.DocumentCpf)
+                    Password = PointRecordHashPass.Encrypt(prop.DocumentCpf),
+                    FirstAccess = true
                 },
                 Collections = new List<Collections>
                 {

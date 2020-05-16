@@ -11,7 +11,8 @@ namespace DelMazo.PointRecord.Service.Persistence.Entities
         [JsonProperty("cpf")]
         public string Document { get; set; }
 
-        [System.Text.Json.Serialization.JsonIgnore]
+        public bool FisrtAccess { get; set; }
+
         public string Token { get; set; }
 
         public static implicit operator AuthResponse(Auth prop)
@@ -20,6 +21,7 @@ namespace DelMazo.PointRecord.Service.Persistence.Entities
             {
                 Id = prop.Id,
                 Document = prop.Document,
+                FisrtAccess = prop.FirstAccess,
                 Token = prop.Token
             };
         }

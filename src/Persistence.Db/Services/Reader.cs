@@ -1,13 +1,18 @@
-﻿using DelMazo.PointRecord.Service.Domain.Entities;
+﻿using DelMazo.PointRecord.Service.Application.Helpers;
+using DelMazo.PointRecord.Service.Domain.Entities;
 using DelMazo.PointRecord.Service.Persistence.Entities;
 using DelMazo.PointRecord.Service.Persistence.Interfaces;
 using DelMazo.PointRecord.Service.PersistenceDb.Context;
 using DelMazo.PointRecord.Service.PersistenceDb.Enums;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace DelMazo.PointRecord.Service.PersistenceDb.Services
@@ -23,11 +28,6 @@ namespace DelMazo.PointRecord.Service.PersistenceDb.Services
             _logger = logger;
             _context = context;
             _appSettings = appSettings.Value;
-        }
-
-        public Task<AuthResponse> GetAuthLogin(Auth login)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<UserResponse> GetById(string id)
@@ -64,41 +64,52 @@ namespace DelMazo.PointRecord.Service.PersistenceDb.Services
             }
         }
 
-        //public async Task<AuthResponse> GetAuthLogin(Auth login)
-        //{
-        //    var response = _context.Auth.Where(w => w.Document.Equals(login.Document) && w.Password.Equals(login.Password)).FirstOrDefault();
+        public async Task<AuthResponse> GetAuthLogin(Auth login)
+        {
+            _logger.LogInformation("Start get auth users from db");
 
-        //    if (response is null)
-        //        return response;
+            try
+            {
+                var response = await _context.GetAuth<Auth>(login.Document, ColllectionsEnum.Auths.ToString());
 
-        //    var token = await GetToken(response);
-        //    response.Token = token;
+                if (response is null)
+                    return response;
 
-        //    return response;
-        //}
+                if (!PointRecordHashPass.Decrypt(response.Password).Equals(login.Password))
+                    return null;
 
-        //public async Task<User> GetById(int id)
-        //{
-        //    throw new NotImplementedException();
-        //}
+                if (response.FirstAccess)
+                    return response;
 
-        //private async Task<string> GetToken(Auth response)
-        //{
-        //    var tokenHandler = new JwtSecurityTokenHandler();
-        //    var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-        //    var tokenDescriptor = new SecurityTokenDescriptor
-        //    {
-        //        Subject = new ClaimsIdentity(new Claim[]
-        //        {
-        //            new Claim(ClaimTypes.Name, response.Id.ToString())
-        //        }),
-        //        Expires = DateTime.UtcNow.AddDays(7),
-        //        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        //    };
-        //    var token = tokenHandler.CreateToken(tokenDescriptor);
-        //    var tokenString = tokenHandler.WriteToken(token);
+                var token = GetToken(response);
+                response.Token = token;
 
-        //    return tokenString;
-        //}
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failad to get auth users", ex.Message);
+                return null;
+            }
+        }
+
+        private string GetToken(Auth response)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, response.Id.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            return tokenString;
+        }
     }
 }

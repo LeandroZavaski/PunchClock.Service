@@ -35,10 +35,10 @@ namespace DelMazo.PointRecord.Service.Persistence.Entities
 
         public byte Active { get; set; }
 
-        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public AuthResponse AuthResponse { get; set; }
 
-        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public IEnumerable<Collections> Collections { get; set; }
 
         public static implicit operator UserResponse(User prop)

@@ -30,8 +30,11 @@ namespace DelMazo.PointRecord.Service.PersistenceDb.Services
 
             try
             {
+                await _context.Remove<Auth>(id, ColllectionsEnum.Auths.ToString());
+
                 var response = await _context.Remove<User>(id, ColllectionsEnum.Users.ToString());
                 var json = JsonConvert.SerializeObject(response);
+
                 return JsonConvert.DeserializeObject<UserResponse>(json);
             }
             catch (Exception ex)

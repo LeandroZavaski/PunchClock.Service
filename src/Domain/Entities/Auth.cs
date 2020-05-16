@@ -14,6 +14,9 @@ namespace DelMazo.PointRecord.Service.Domain.Entities
         [BsonElement]
         public string Password { get; set; }
 
+        [BsonElement]
+        public bool FirstAccess { get; set; }
+
         [NotMapped]
         public string Token { get; set; }
     }

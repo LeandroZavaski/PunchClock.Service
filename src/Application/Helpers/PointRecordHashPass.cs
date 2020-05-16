@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DelMazo.PointRecord.Service.Application.Helpers
 {
-    public class PointRecordHasshPass
+    public class PointRecordHashPass
     {
         public static string Encrypt(string pass)
         {

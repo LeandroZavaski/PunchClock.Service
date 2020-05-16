@@ -39,7 +39,10 @@ namespace DelMazo.PointRecord.Service.Web
             services.AddMvc()
                 .AddFluentValidation(opt =>
                 {
+                    opt.RegisterValidatorsFromAssemblyContaining<UserValidator>();
                     opt.RegisterValidatorsFromAssemblyContaining<PunchClockValidator>();
+                    opt.RegisterValidatorsFromAssemblyContaining<AuthResetValidator>();
+                    opt.RegisterValidatorsFromAssemblyContaining<AuthValidator>(); 
                 });
 
             services.AddTransient<DataContext>();

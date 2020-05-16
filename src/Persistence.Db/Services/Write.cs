@@ -77,6 +77,29 @@ namespace DelMazo.PointRecord.Service.PersistenceDb.Services
             return true;
         }
 
+        public async Task<AuthResponse> WriteAuthReset(Auth reset)
+        {
+            _logger.LogInformation("Start reset password from document: ", reset.Document);
+
+            try
+            {
+                var auth = await _context.GetAuth<Auth>(reset.Document, ColllectionsEnum.Auths.ToString());
+
+                if (auth is null)
+                    return auth;
+
+                reset.Id = auth.Id;
+                var response = await _context.Update(reset, auth.Id, ColllectionsEnum.Auths.ToString());
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex.Message, $"Not was possible reset password from document: {reset.Document}");
+                return null;
+            }
+        }
+
         public async Task<UserResponse> WriteUserAsync(User user)
         {
             _logger.LogInformation("Start load customer userId: ", user.Id);
