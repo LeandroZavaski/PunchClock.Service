@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,9 +31,9 @@ namespace DelMazo.PointRecord.Service.PersistenceDb.Services
             _appSettings = appSettings.Value;
         }
 
-        public async Task<UserResponse> GetById(string id)
+        public async Task<UserResponse> GetUserByIdAsync(string id)
         {
-            _logger.LogInformation("Start get all users from db");
+            _logger.LogInformation("Start get user by id from db");
 
             try
             {
@@ -64,7 +65,7 @@ namespace DelMazo.PointRecord.Service.PersistenceDb.Services
             }
         }
 
-        public async Task<AuthResponse> GetAuthLogin(Auth login)
+        public async Task<AuthResponse> GetAuthLoginAsync(Auth login)
         {
             _logger.LogInformation("Start get auth users from db");
 
@@ -110,6 +111,25 @@ namespace DelMazo.PointRecord.Service.PersistenceDb.Services
             var tokenString = tokenHandler.WriteToken(token);
 
             return tokenString;
+        }
+
+        public async Task<IEnumerable<RoleResponse>> GetRolesAsync()
+        {
+            _logger.LogInformation("Start get all roles from db");
+
+            try
+            {
+                var response = await _context.GetAll<Role>(ColllectionsEnum.Roles.ToString());
+                var list = (response.Where(item => (bool)item.Active)).ToList();
+                var json = JsonConvert.SerializeObject(list);
+
+                return JsonConvert.DeserializeObject<IEnumerable<RoleResponse>>(json);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failad to get all roles", ex.Message);
+                return null;
+            }
         }
     }
 }

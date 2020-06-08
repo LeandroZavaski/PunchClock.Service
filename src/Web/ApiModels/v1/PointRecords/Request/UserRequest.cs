@@ -39,17 +39,23 @@ namespace DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request
         [JsonProperty("email")]
         public string Email { get; set; }
 
+        [JsonProperty("endereco")]
+        public Address Address { get; set; }
+
         [JsonProperty("dataContratacao")]
         public DateTime StartDate { get; set; }
 
         [JsonProperty("dataDemissao")]
         public DateTime? FinishDate { get; set; }
 
+        [JsonProperty("turno")]
+        public string Shift { get; set; }
+
         [JsonProperty("ativo")]
-        public byte Active { get; set; }
+        public bool Active { get; set; }
 
         [JsonProperty("funcao")]
-        public RoleRequest RoleRequest { get; set; }
+        public RoleUserRequest RoleRequest { get; set; }
 
         [System.Text.Json.Serialization.JsonIgnore]
         public IEnumerable<Collections> Collections { get; set; }
@@ -68,8 +74,9 @@ namespace DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request
                 DocumentRg = prop.DocumentRg,
                 DocumentPis = prop.DocumentPis,
                 Email = prop.Email,
+                Address = prop.Address,
                 StartDate = prop.StartDate,
-                FinishDate = prop.FinishDate,
+                FinishDate = prop?.FinishDate,
                 Active = prop.Active,
                 Registration = prop.Registration,
                 Role = new Role
@@ -90,6 +97,28 @@ namespace DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request
                     new Collections{ Description = ColllectionsEnum.Users.ToString() },
                     new Collections{ Description = ColllectionsEnum.Auths.ToString() },
                 }
+            };
+        }
+    }
+
+    public class RoleUserRequest
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        [JsonProperty("descricao")]
+        public string Description { get; set; }
+
+        [JsonProperty("ativo")]
+        public bool Active { get; set; }
+
+        public static implicit operator Role(RoleUserRequest prop)
+        {
+            return prop is null ? null : new Role()
+            {
+                Id = prop.Id,
+                Description = prop.Description,
+                Active = prop.Active
             };
         }
     }

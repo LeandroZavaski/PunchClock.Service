@@ -18,7 +18,7 @@ namespace DelMazo.PointRecord.Service.Application.QuerysHandlers.PointRecord
 
         public async Task<AuthResponse> Handle(ReadAuthQuery request, CancellationToken cancellationToken)
         {
-            return await _readRepository.GetAuthLogin(request.Login);
+            return await _readRepository.GetAuthLoginAsync(request.Login);
         }
     }
 }

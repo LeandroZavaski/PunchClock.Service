@@ -39,7 +39,10 @@ namespace DelMazo.PointRecord.Service.Domain.Entities
         
         [BsonElement]
         public string Email { get; set; }
-        
+
+        [BsonElement]
+        public Address Address { get; set; }
+
         [BsonElement]
         [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime StartDate { get; set; }
@@ -47,9 +50,12 @@ namespace DelMazo.PointRecord.Service.Domain.Entities
         [BsonElement]
         [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime? FinishDate { get; set; }
-        
+
         [BsonElement]
-        public byte Active { get; set; }
+        public string Shift { get; set; }
+
+        [BsonElement]
+        public BsonBoolean Active { get; set; }
         
         [BsonElement]
         public Auth Auth { get; set; }

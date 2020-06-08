@@ -13,6 +13,9 @@ namespace DelMazo.PointRecord.Service.Persistence.Interfaces
         Task<UserResponse> WriteUserAsync(User user);
 
         Task<UserResponse> WriteUserUpdateAsync(User user, string id);
-        
+
+        Task<RoleResponse> WriteRoleAsync(Role role);
+
+        Task<RoleResponse> WriteRoleUpdateAsync(Role role, string id);
     }
 }

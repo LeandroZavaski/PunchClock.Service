@@ -7,10 +7,12 @@ namespace DelMazo.PointRecord.Service.Persistence.Interfaces
 {
     public interface IReader
     {
-        Task<AuthResponse> GetAuthLogin(Auth login);
+        Task<AuthResponse> GetAuthLoginAsync(Auth login);
         
-        Task<UserResponse> GetById(string id);
+        Task<UserResponse> GetUserByIdAsync(string id);
 
         Task<IEnumerable<UserResponse>> GetUserAsync();
+
+        Task<IEnumerable<RoleResponse>> GetRolesAsync();
     }
 }

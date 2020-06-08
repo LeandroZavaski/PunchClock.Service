@@ -147,5 +147,39 @@ namespace DelMazo.PointRecord.Service.PersistenceDb.Services
                 return null;
             }
         }
+
+        public async Task<RoleResponse> WriteRoleAsync(Role role)
+        {
+            _logger.LogInformation("Start write role");
+
+            try
+            {
+                var response = await _context.Add(role, role.Id, ColllectionsEnum.Roles.ToString());
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex.Message, $"Not was possible load data roleId: {role.Id}");
+                return null;
+            }
+        }
+
+        public async Task<RoleResponse> WriteRoleUpdateAsync(Role role, string id)
+        {
+            _logger.LogInformation("Start update role");
+
+            try
+            {
+                //Update user
+                role.Id = id;
+                var response = await _context.Update(role, id, ColllectionsEnum.Roles.ToString());
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex.Message, $"Not was possible update data roleId: {id}");
+                return null;
+            }
+        }
     }
 }

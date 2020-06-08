@@ -23,7 +23,7 @@ namespace DelMazo.PointRecord.Service.Web.Controllers.v1
         }
 
         [ProducesResponseType(typeof(UserResponse), 200)]     // Ok
-        [ProducesResponseType(400)]     // BadRequest
+        [ProducesResponseType(400)]                           // BadRequest
         [HttpGet]
         public async Task<ActionResult> Get()
         {
@@ -36,7 +36,7 @@ namespace DelMazo.PointRecord.Service.Web.Controllers.v1
         }
 
         [ProducesResponseType(typeof(UserResponse), 200)]     // Ok
-        [ProducesResponseType(400)]     // BadRequest
+        [ProducesResponseType(400)]                           // BadRequest
         [HttpGet]
         [Route("{id}")]
         public async Task<ActionResult> GetById(string id)
@@ -49,8 +49,8 @@ namespace DelMazo.PointRecord.Service.Web.Controllers.v1
             return Ok(response);
         }
 
-        [ProducesResponseType(200)]     // Ok
-        [ProducesResponseType(400)]     // BadRequest
+        [ProducesResponseType(typeof(UserResponse), 200)]     // Ok
+        [ProducesResponseType(400)]                           // BadRequest
         [HttpPost]
         public async Task<ActionResult> Post([FromBody]UserRequest user)
         {
@@ -59,11 +59,11 @@ namespace DelMazo.PointRecord.Service.Web.Controllers.v1
             if (response is null)
                 return BadRequest();
 
-            return Ok(response.Id);
+            return Ok(response);
         }
 
-        [ProducesResponseType(200)]     // Ok
-        [ProducesResponseType(400)]     // BadRequest
+        [ProducesResponseType(typeof(UserResponse), 200)]     // Ok
+        [ProducesResponseType(400)]                           // BadRequest
         [HttpPut]
         [Route("{id}/user")]
         public async Task<ActionResult> Put(string id, [FromBody]UserRequest user)
@@ -76,8 +76,8 @@ namespace DelMazo.PointRecord.Service.Web.Controllers.v1
             return Ok(response);
         }
 
-        [ProducesResponseType(200)]     // Ok
-        [ProducesResponseType(400)]     // BadRequest
+        [ProducesResponseType(typeof(UserResponse), 200)]     // Ok
+        [ProducesResponseType(400)]                           // BadRequest
         [HttpDelete]
         [Route("{id}")]
         public async Task<ActionResult> Delete(string id)

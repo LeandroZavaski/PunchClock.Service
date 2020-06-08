@@ -8,14 +8,11 @@ namespace DelMazo.PointRecord.Service.Persistence.Entities
 {
     public class RoleResponse
     {
-        [JsonProperty("id")]
         public string Id { get; set; }
 
-        [JsonProperty("descricao")]
         public string Description { get; set; }
 
-        [JsonProperty("ativo")]
-        public byte Active { get; set; }
+        public bool Active { get; set; }
 
         public static implicit operator RoleResponse(Role prop)
         {
@@ -23,7 +20,7 @@ namespace DelMazo.PointRecord.Service.Persistence.Entities
             {
                 Id = prop.Id,
                 Description = prop.Description,
-                Active = prop.Active
+                Active = (bool)prop.Active
             };
         }
     }

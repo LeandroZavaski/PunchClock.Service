@@ -26,7 +26,7 @@ namespace DelMazo.PointRecord.Service.PersistenceDb.Services
 
         public async Task<UserResponse> RemoveUserByIdAsync(string id)
         {
-            _logger.LogInformation("Start get all users from db");
+            _logger.LogInformation("Start remove user by id from db");
 
             try
             {
@@ -39,7 +39,27 @@ namespace DelMazo.PointRecord.Service.PersistenceDb.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError("Failad to get all users", ex.Message);
+                _logger.LogError("Failad remove user by id from db", ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<RoleResponse> RemoveRoleByIdAsync(string id)
+        {
+            _logger.LogInformation("Start remove role by id from db");
+
+            try
+            {
+                await _context.Remove<Role>(id, ColllectionsEnum.Roles.ToString());
+
+                var response = await _context.Remove<Role>(id, ColllectionsEnum.Roles.ToString());
+                var json = JsonConvert.SerializeObject(response);
+
+                return JsonConvert.DeserializeObject<RoleResponse>(json);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failad remove role by id from db", ex.Message);
                 return null;
             }
         }

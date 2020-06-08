@@ -1,12 +1,14 @@
 ﻿using DelMazo.PointRecord.Service.Domain.Entities;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
+using System;
 
 namespace DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request
 {
     public class RoleRequest
     {
-        public string Id { get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string Id { get; set; } = Convert.ToString(Guid.NewGuid());
 
         [BindRequired]
         [JsonProperty("descricao")]
@@ -14,12 +16,13 @@ namespace DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request
 
         [BindRequired]
         [JsonProperty("ativo")]
-        public byte Active { get; set; }
+        public bool Active { get; set; }
 
         public static implicit operator Role(RoleRequest prop)
         {
             return prop is null ? null : new Role()
             {
+                Id = prop.Id,
                 Description = prop.Description,
                 Active = prop.Active
             };

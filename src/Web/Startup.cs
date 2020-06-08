@@ -112,7 +112,7 @@ namespace DelMazo.PointRecord.Service.Web
                     {
                         var userService = context.HttpContext.RequestServices.GetRequiredService<IReader>();
                         var userId = context.Principal.Identity.Name;
-                        var user = userService.GetById(userId);
+                        var user = userService.GetUserByIdAsync(userId);
                         if (user == null)
                         {
                             // return unauthorized if user no longer exists

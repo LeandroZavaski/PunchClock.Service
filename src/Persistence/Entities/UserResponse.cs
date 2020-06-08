@@ -25,7 +25,7 @@ namespace DelMazo.PointRecord.Service.Persistence.Entities
 
         public string DocumentPis { get; set; }
 
-        public RoleResponse RoleResponse { get; set; }
+        public RoleResponse Role { get; set; }
 
         public string Email { get; set; }
 
@@ -33,7 +33,7 @@ namespace DelMazo.PointRecord.Service.Persistence.Entities
 
         public DateTime? FinishDate { get; set; }
 
-        public byte Active { get; set; }
+        public bool Active { get; set; }
 
         [System.Text.Json.Serialization.JsonIgnore]
         public AuthResponse AuthResponse { get; set; }
@@ -54,16 +54,16 @@ namespace DelMazo.PointRecord.Service.Persistence.Entities
                 DocumentCpf = prop.DocumentCpf,
                 DocumentRg = prop.DocumentRg,
                 DocumentPis = prop.DocumentPis,
-                RoleResponse = new RoleResponse
+                Role = new RoleResponse
                 {
-                    Active = prop.Role.Active,
+                    Active = (bool)prop.Role.Active,
                     Description = prop.Role.Description,
                     Id = prop.Role.Id
                 },
                 Email = prop.Email,
                 StartDate = prop.StartDate,
                 FinishDate = prop.FinishDate,
-                Active = prop.Active,
+                Active = (bool)prop.Active,
                 AuthResponse = new AuthResponse
                 {
                     Id = prop.Auth.Id,

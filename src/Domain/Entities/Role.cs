@@ -10,6 +10,6 @@ namespace DelMazo.PointRecord.Service.Domain.Entities
         [BsonElement]
         public string Description { get; set; }
         [BsonElement]
-        public byte Active { get; set; }
+        public BsonBoolean Active { get; set; }
     }
 }
