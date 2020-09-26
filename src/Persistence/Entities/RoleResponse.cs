@@ -1,10 +1,6 @@
-﻿using DelMazo.PointRecord.Service.Domain.Entities;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using PunchClock.Service.Domain.Entities;
 
-namespace DelMazo.PointRecord.Service.Persistence.Entities
+namespace PunchClock.Service.Persistence.Entities
 {
     public class RoleResponse
     {

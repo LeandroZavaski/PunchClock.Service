@@ -1,11 +1,7 @@
-﻿using DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request;
-using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using FluentValidation;
+using PunchClock.Service.Web.ApiModels.v1.PointRecords.Request;
 
-namespace DelMazo.PointRecord.Service.Web.Validators.v1.PointRecord
+namespace PunchClock.Service.Web.Validators.v1.PointRecord
 {
     public class AuthResetValidator : AbstractValidator<AuthResetRequest>
     {

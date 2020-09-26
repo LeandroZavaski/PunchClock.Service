@@ -1,13 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System;
 
-namespace DelMazo.PointRecord.Service.Domain.Entities
+namespace PunchClock.Service.Domain.Entities
 {
     public partial class Vacation
     {
-        public int Id { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime FinishDate { get; set; }
-        public string DayNumber { get; set; }
+        [BsonId]
+        public string Id { get; set; }
+
+        [BsonElement]
+        public string Registration { get; set; }
+
+        [BsonElement]
+        public string Name { get; set; }
+
+        [BsonElement]
+        public Document Document { get; set; }
+
+        [BsonElement]
+        [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+        public DateTime? StartDate { get; set; }
+
+        [BsonElement]
+        [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+        public DateTime? EndDate { get; set; }
+
+        [BsonElement]
+        public string DaysNumber { get; set; }
+
+        [BsonElement]
+        public bool Active { get; set; }
     }
 }

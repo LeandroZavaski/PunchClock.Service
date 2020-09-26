@@ -1,17 +1,17 @@
-﻿using DelMazo.PointRecord.Service.Application.Commands.PointRecord;
-using DelMazo.PointRecord.Service.Persistence.Entities;
-using DelMazo.PointRecord.Service.Persistence.Interfaces;
-using MediatR;
+﻿using MediatR;
+using PunchClock.Service.Application.Commands.PointRecord;
+using PunchClock.Service.Persistence.Entities;
+using PunchClock.Service.Persistence.Interfaces.Writers;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DelMazo.PointRecord.Service.Application.CommandsHandlers.PointRecord.Users
+namespace PunchClock.Service.Application.CommandsHandlers.PointRecord.Users
 {
     public class WriteUserHandler : IRequestHandler<WriteUserCommand, UserResponse>
     {
-        private readonly IWrite _writeRepository;
+        private readonly IWriteUser _writeRepository;
 
-        public WriteUserHandler(IWrite writeRepository)
+        public WriteUserHandler(IWriteUser writeRepository)
         {
             _writeRepository = writeRepository;
         }

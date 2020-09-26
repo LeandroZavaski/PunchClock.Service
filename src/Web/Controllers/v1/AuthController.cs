@@ -1,12 +1,12 @@
-﻿using DelMazo.PointRecord.Service.Application.Commands.PointRecord;
-using DelMazo.PointRecord.Service.Application.Querys.PointRecord;
-using DelMazo.PointRecord.Service.Persistence.Entities;
-using DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using PunchClock.Service.Application.Commands.PointRecord.Auth;
+using PunchClock.Service.Application.Querys.PointRecord;
+using PunchClock.Service.Persistence.Entities;
+using PunchClock.Service.Web.ApiModels.v1.PointRecords.Request;
 using System.Threading.Tasks;
 
-namespace DelMazo.PointRecord.Service.Web.Controllers.v1
+namespace PunchClock.Service.Web.Controllers.v1
 {
     [ApiController]
     [ApiVersionNeutral]

@@ -1,7 +1,7 @@
-﻿using DelMazo.PointRecord.Service.Persistence.Entities;
-using MediatR;
+﻿using MediatR;
+using PunchClock.Service.Persistence.Entities;
 
-namespace DelMazo.PointRecord.Service.Application.Commands.PointRecord.Role
+namespace PunchClock.Service.Application.Commands.PointRecord.Role
 {
     public class WriteRoleUpdateCommand : IRequest<RoleResponse>
     {

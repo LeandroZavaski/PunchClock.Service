@@ -1,17 +1,17 @@
-﻿using DelMazo.PointRecord.Service.Application.Querys.PointRecord;
-using DelMazo.PointRecord.Service.Persistence.Entities;
-using DelMazo.PointRecord.Service.Persistence.Interfaces;
-using MediatR;
+﻿using MediatR;
+using PunchClock.Service.Application.Querys.PointRecord;
+using PunchClock.Service.Persistence.Entities;
+using PunchClock.Service.Persistence.Interfaces.Readers;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DelMazo.PointRecord.Service.Application.QuerysHandlers.PointRecord
+namespace PunchClock.Service.Application.QuerysHandlers.PointRecord
 {
     public class ReadAuthHandler : IRequestHandler<ReadAuthQuery, AuthResponse>
     {
-        private readonly IReader _readRepository;
+        private readonly IReadAuth _readRepository;
 
-        public ReadAuthHandler(IReader readRepository)
+        public ReadAuthHandler(IReadAuth readRepository)
         {
             _readRepository = readRepository;
         }

@@ -1,27 +1,25 @@
-﻿using DelMazo.PointRecord.Service.Application.Querys.PointRecord;
-using DelMazo.PointRecord.Service.Persistence.Entities;
-using DelMazo.PointRecord.Service.Persistence.Interfaces;
-using MediatR;
-using System;
+﻿using MediatR;
+using PunchClock.Service.Application.Querys.PointRecord;
+using PunchClock.Service.Persistence.Entities;
+using PunchClock.Service.Persistence.Interfaces.Readers;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DelMazo.PointRecord.Service.Application.QuerysHandlers.PointRecord
+namespace PunchClock.Service.Application.QuerysHandlers.PointRecord
 {
     public class ReadUsersHandler : IRequestHandler<ReadUsersQuery, IEnumerable<UserResponse>>
     {
-        private readonly IReader _readRepository;
+        private readonly IReadUser _readRepository;
 
-        public ReadUsersHandler(IReader readRepository)
+        public ReadUsersHandler(IReadUser readRepository)
         {
             _readRepository = readRepository;
         }
 
         public async Task<IEnumerable<UserResponse>> Handle(ReadUsersQuery request, CancellationToken cancellationToken)
         {
-            var response = await _readRepository.GetUserAsync();
+            var response = await _readRepository.GetUsersAsync();
             return response;
         }
     }

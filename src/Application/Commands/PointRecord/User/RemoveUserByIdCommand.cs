@@ -1,10 +1,7 @@
-﻿using DelMazo.PointRecord.Service.Persistence.Entities;
-using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MediatR;
+using PunchClock.Service.Persistence.Entities;
 
-namespace DelMazo.PointRecord.Service.Application.Commands.PointRecord
+namespace PunchClock.Service.Application.Commands.PointRecord
 {
     public class RemoveUserByIdCommand : IRequest<UserResponse>
     {

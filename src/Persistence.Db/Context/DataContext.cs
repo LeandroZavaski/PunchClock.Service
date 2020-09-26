@@ -1,11 +1,10 @@
-﻿using DelMazo.PointRecord.Service.Application.Helpers;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
-using MongoDB.Driver.Linq;
+using PunchClock.Service.Domain.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DelMazo.PointRecord.Service.PersistenceDb.Context
+namespace PunchClock.Service.PersistenceDb.Context
 {
     public class DataContext
     {
@@ -29,10 +28,13 @@ namespace DelMazo.PointRecord.Service.PersistenceDb.Context
             return await _collection.Find(filter).FirstOrDefaultAsync();
         }
 
-        public void AddRange<T>(IEnumerable<T> generic, string collection)
+        public async Task<IEnumerable<T>> AddRange<T>(IEnumerable<T> generic, string collection)
         {
             var _collection = _db.GetCollection<T>(collection);
-            _collection.InsertMany(generic);
+
+            await _collection.InsertManyAsync(generic);
+
+            return await _collection.FindAsync<T>(data => true).Result.ToListAsync();
         }
 
         public async Task<IEnumerable<T>> GetAll<T>(string collection)
@@ -73,6 +75,22 @@ namespace DelMazo.PointRecord.Service.PersistenceDb.Context
             await _collection.FindOneAndDeleteAsync(filter);
 
             return await _collection.Find(filter).FirstOrDefaultAsync();
+        }
+
+        public async Task<int> GetSequenceValue(string sequenceName, string collection)
+        {
+            var _collection = _db.GetCollection<Sequence>(collection);
+            UpdateDefinition<Sequence> update;
+            var find = await _collection.FindAsync<Sequence>(data => true).Result.ToListAsync();
+            var filter = Builders<Sequence>.Filter.Eq(s => s.SequenceName, sequenceName);
+
+            update = find.Count == 0
+                ? Builders<Sequence>.Update.Inc(s => s.SequenceValue, 10000)
+                : Builders<Sequence>.Update.Inc(s => s.SequenceValue, 1);
+
+            var result = await _collection.FindOneAndUpdateAsync(filter, update, new FindOneAndUpdateOptions<Sequence, Sequence> { IsUpsert = true, ReturnDocument = ReturnDocument.After });
+
+            return result.SequenceValue;
         }
     }
 }

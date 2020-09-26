@@ -2,9 +2,9 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace DelMazo.PointRecord.Service.Application.Helpers
+namespace PunchClock.Service.Application.Helpers
 {
-    public class PointRecordHashPass
+    public static class PointRecordHashPass
     {
         public static string Encrypt(string pass)
         {

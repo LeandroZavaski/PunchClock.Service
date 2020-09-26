@@ -1,17 +1,17 @@
-﻿using DelMazo.PointRecord.Service.Application.Commands.PointRecord.Role;
-using DelMazo.PointRecord.Service.Persistence.Entities;
-using DelMazo.PointRecord.Service.Persistence.Interfaces;
-using MediatR;
+﻿using MediatR;
+using PunchClock.Service.Application.Commands.PointRecord.Role;
+using PunchClock.Service.Persistence.Entities;
+using PunchClock.Service.Persistence.Interfaces.Removes;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DelMazo.PointRecord.Service.Application.CommandsHandlers.PointRecord.Role
+namespace PunchClock.Service.Application.CommandsHandlers.PointRecord.Role
 {
     public class RemoveRoleByIdHandler : IRequestHandler<RemoveRoleByIdCommand, RoleResponse>
     {
-        private readonly IRemove _removeRepository;
+        private readonly IRemoveRole _removeRepository;
 
-        public RemoveRoleByIdHandler(IRemove removeRepository)
+        public RemoveRoleByIdHandler(IRemoveRole removeRepository)
         {
             _removeRepository = removeRepository;
         }

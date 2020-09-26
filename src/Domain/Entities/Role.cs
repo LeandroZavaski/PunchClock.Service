@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace DelMazo.PointRecord.Service.Domain.Entities
+namespace PunchClock.Service.Domain.Entities
 {
     public class Role
     {

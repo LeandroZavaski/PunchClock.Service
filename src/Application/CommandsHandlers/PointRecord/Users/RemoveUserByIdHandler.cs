@@ -1,25 +1,24 @@
-﻿using DelMazo.PointRecord.Service.Application.Commands.PointRecord;
-using DelMazo.PointRecord.Service.Persistence.Entities;
-using DelMazo.PointRecord.Service.Persistence.Interfaces;
-using MediatR;
+﻿using MediatR;
+using PunchClock.Service.Application.Commands.PointRecord;
+using PunchClock.Service.Persistence.Entities;
+using PunchClock.Service.Persistence.Interfaces.Removes;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DelMazo.PointRecord.Service.Application.CommandsHandlers.PointRecord.Users
+namespace PunchClock.Service.Application.CommandsHandlers.PointRecord.Users
 {
     public class RemoveUserByIdHandler : IRequestHandler<RemoveUserByIdCommand, UserResponse>
     {
-        private readonly IRemove _removeRepository;
+        private readonly IRemoveUser _removeRepository;
 
-        public RemoveUserByIdHandler(IRemove removeRepository)
+        public RemoveUserByIdHandler(IRemoveUser removeRepository)
         {
             _removeRepository = removeRepository;
         }
 
         public async Task<UserResponse> Handle(RemoveUserByIdCommand request, CancellationToken cancellationToken)
         {
-            var response = await _removeRepository.RemoveUserByIdAsync(request.Id);
-            return response;
+            return await _removeRepository.RemoveUserByIdAsync(request.Id);
         }
     }
 }

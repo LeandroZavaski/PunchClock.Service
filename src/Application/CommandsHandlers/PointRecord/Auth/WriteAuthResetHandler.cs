@@ -1,18 +1,17 @@
-﻿using DelMazo.PointRecord.Service.Application.Commands.PointRecord;
-using DelMazo.PointRecord.Service.Persistence.Entities;
-using DelMazo.PointRecord.Service.Persistence.Interfaces;
-using MediatR;
-using System;
+﻿using MediatR;
+using PunchClock.Service.Application.Commands.PointRecord.Auth;
+using PunchClock.Service.Persistence.Entities;
+using PunchClock.Service.Persistence.Interfaces.Writers;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DelMazo.PointRecord.Service.Application.CommandsHandlers.PointRecord
+namespace PunchClock.Service.Application.CommandsHandlers.PointRecord.Auth
 {
     public class WriteAuthResetHandler : IRequestHandler<WriteAuthResetCommand, AuthResponse>
     {
-        private readonly IWrite _writeRepository;
+        private readonly IWriteAuth _writeRepository;
 
-        public WriteAuthResetHandler(IWrite writeRepository)
+        public WriteAuthResetHandler(IWriteAuth writeRepository)
         {
             _writeRepository = writeRepository;
         }

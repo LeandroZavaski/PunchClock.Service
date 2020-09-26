@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>DelMazo.PointRecord.Service.Persistence</AssemblyName>
-    <RootNamespace>DelMazo.PointRecord.Service.Persistence</RootNamespace>
+    <AssemblyName>PunchClock.Service.Persistence</AssemblyName>
+    <RootNamespace>PunchClock.Service.Persistence</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

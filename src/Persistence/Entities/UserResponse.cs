@@ -1,9 +1,8 @@
-﻿using DelMazo.PointRecord.Service.Domain.Entities;
+﻿using PunchClock.Service.Domain.Entities;
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
-namespace DelMazo.PointRecord.Service.Persistence.Entities
+namespace PunchClock.Service.Persistence.Entities
 {
     public class UserResponse
     {
@@ -19,11 +18,7 @@ namespace DelMazo.PointRecord.Service.Persistence.Entities
 
         public byte Gender { get; set; }
 
-        public string DocumentCpf { get; set; }
-
-        public string DocumentRg { get; set; }
-
-        public string DocumentPis { get; set; }
+        public List<Document> Documents { get; set; }
 
         public RoleResponse Role { get; set; }
 
@@ -51,9 +46,7 @@ namespace DelMazo.PointRecord.Service.Persistence.Entities
                 BirthDate = prop.BirthDate,
                 Phone = prop.Phone,
                 Gender = prop.Gender,
-                DocumentCpf = prop.DocumentCpf,
-                DocumentRg = prop.DocumentRg,
-                DocumentPis = prop.DocumentPis,
+                Documents = prop.Documents,
                 Role = new RoleResponse
                 {
                     Active = (bool)prop.Role.Active,

@@ -1,12 +1,13 @@
-﻿using DelMazo.PointRecord.Service.Application.Commands.PointRecord.Role;
-using DelMazo.PointRecord.Service.Application.Querys.PointRecord;
-using DelMazo.PointRecord.Service.Persistence.Entities;
-using DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using PunchClock.Service.Application.Commands.PointRecord.Role;
+using PunchClock.Service.Application.Querys.PointRecord;
+using PunchClock.Service.Persistence.Entities;
+using PunchClock.Service.Web.ApiModels.v1.PointRecords.Request;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DelMazo.PointRecord.Service.Web.Controllers.v1
+namespace PunchClock.Service.Web.Controllers.v1
 {
     [ApiController]
     [ApiVersionNeutral]
@@ -22,7 +23,7 @@ namespace DelMazo.PointRecord.Service.Web.Controllers.v1
             _mediator = mediator;
         }
 
-        [ProducesResponseType(typeof(RoleResponse), 200)]     // Ok
+        [ProducesResponseType(typeof(IEnumerable<RoleResponse>), 200)]     // Ok
         [ProducesResponseType(400)]                            // BadRequest
         [HttpGet]
         public async Task<ActionResult> Get()
@@ -47,7 +48,7 @@ namespace DelMazo.PointRecord.Service.Web.Controllers.v1
         [ProducesResponseType(typeof(RoleResponse), 200)]     // Ok
         [ProducesResponseType(400)]                            // BadRequest
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody]RoleRequest role)
+        public async Task<ActionResult> Post([FromBody] RoleRequest role)
         {
             var response = await _mediator.Send(new WriteRoleCommand(role));
 
@@ -61,7 +62,7 @@ namespace DelMazo.PointRecord.Service.Web.Controllers.v1
         [ProducesResponseType(400)]                            // BadRequest
         [HttpPut]
         [Route("{id}/roles")]
-        public async Task<ActionResult> Put(string id, [FromBody]RoleRequest role)
+        public async Task<ActionResult> Put(string id, [FromBody] RoleRequest role)
         {
             var response = await _mediator.Send(new WriteRoleUpdateCommand(id, role));
 

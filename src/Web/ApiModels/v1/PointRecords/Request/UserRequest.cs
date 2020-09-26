@@ -1,19 +1,18 @@
-﻿using DelMazo.PointRecord.Service.Application.Helpers;
-using DelMazo.PointRecord.Service.Domain.Entities;
-using DelMazo.PointRecord.Service.PersistenceDb.Enums;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using PunchClock.Service.Application.Helpers;
+using PunchClock.Service.Domain.Entities;
+using PunchClock.Service.Domain.Enums;
+using PunchClock.Service.PersistenceDb.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request
+namespace PunchClock.Service.Web.ApiModels.v1.PointRecords.Request
 {
     public class UserRequest
     {
         [System.Text.Json.Serialization.JsonIgnore]
         public string Id { get; set; } = Convert.ToString(Guid.NewGuid());
-
-        [JsonProperty("matricula")]
-        public string Registration { get; set; }
 
         [JsonProperty("nome")]
         public string Name { get; set; }
@@ -28,13 +27,7 @@ namespace DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request
         public byte Gender { get; set; }
 
         [JsonProperty("cpf")]
-        public string DocumentCpf { get; set; }
-
-        [JsonProperty("rg")]
-        public string DocumentRg { get; set; }
-
-        [JsonProperty("pis")]
-        public string DocumentPis { get; set; }
+        public List<Document> Documents { get; set; }
 
         [JsonProperty("email")]
         public string Email { get; set; }
@@ -70,15 +63,12 @@ namespace DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request
                 BirthDate = prop.BirthDate,
                 Phone = prop.Phone,
                 Gender = prop.Gender,
-                DocumentCpf = prop.DocumentCpf,
-                DocumentRg = prop.DocumentRg,
-                DocumentPis = prop.DocumentPis,
+                Documents = prop.Documents,
                 Email = prop.Email,
                 Address = prop.Address,
                 StartDate = prop.StartDate,
                 FinishDate = prop?.FinishDate,
                 Active = prop.Active,
-                Registration = prop.Registration,
                 Role = new Role
                 {
                     Id = prop.RoleRequest.Id,
@@ -88,8 +78,8 @@ namespace DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request
                 Auth = new Auth
                 {
                     Id = prop.Id,
-                    Document = prop.DocumentCpf,
-                    Password = PointRecordHashPass.Encrypt(prop.DocumentCpf),
+                    Document = GetDocumentNumber(prop.Documents),
+                    Password = PointRecordHashPass.Encrypt(GetDocumentNumber(prop.Documents)),
                     FirstAccess = true
                 },
                 Collections = new List<Collections>
@@ -98,6 +88,11 @@ namespace DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request
                     new Collections{ Description = ColllectionsEnum.Auths.ToString() },
                 }
             };
+        }
+
+        private static string GetDocumentNumber(List<Document> documents)
+        {
+            return documents.FirstOrDefault(w => w.Type.ToLower().Equals(DocumentType.Cpf)).Number;
         }
     }
 

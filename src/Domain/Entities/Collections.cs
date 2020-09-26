@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DelMazo.PointRecord.Service.Domain.Entities
+﻿namespace PunchClock.Service.Domain.Entities
 {
     public class Collections
     {

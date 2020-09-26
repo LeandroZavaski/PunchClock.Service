@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DelMazo.PointRecord.Service.PersistenceDb.Context
+﻿namespace PunchClock.Service.PersistenceDb.Context
 {
     public class AppSettings
     {

@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DelMazo.PointRecord.Service.Domain.Entities
+namespace PunchClock.Service.Domain.Entities
 {
     public class Auth
     {

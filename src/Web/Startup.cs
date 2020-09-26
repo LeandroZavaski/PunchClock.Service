@@ -1,9 +1,3 @@
-using DelMazo.PointRecord.Service.Application.Commands.PointRecord;
-using DelMazo.PointRecord.Service.Application.Querys.PointRecord;
-using DelMazo.PointRecord.Service.Persistence.Interfaces;
-using DelMazo.PointRecord.Service.PersistenceDb.Context;
-using DelMazo.PointRecord.Service.PersistenceDb.Services;
-using DelMazo.PointRecord.Service.Web.Validators.v1.PointRecord;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,12 +9,20 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using PunchClock.Service.Persistence.Interfaces.Readers;
+using PunchClock.Service.Persistence.Interfaces.Removes;
+using PunchClock.Service.Persistence.Interfaces.Writers;
+using PunchClock.Service.PersistenceDb.Context;
+using PunchClock.Service.PersistenceDb.Services.Readers;
+using PunchClock.Service.PersistenceDb.Services.Removes;
+using PunchClock.Service.PersistenceDb.Services.Writers;
+using PunchClock.Service.Web.Validators.v1.PointRecord;
+using System;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DelMazo.PointRecord.Service.Web
+namespace PunchClock.Service.Web
 {
     public class Startup
     {
@@ -36,19 +38,19 @@ namespace DelMazo.PointRecord.Service.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc()
+            services.AddControllers()
                 .AddFluentValidation(opt =>
                 {
                     opt.RegisterValidatorsFromAssemblyContaining<UserValidator>();
                     opt.RegisterValidatorsFromAssemblyContaining<PunchClockValidator>();
                     opt.RegisterValidatorsFromAssemblyContaining<AuthResetValidator>();
-                    opt.RegisterValidatorsFromAssemblyContaining<AuthValidator>(); 
+                    opt.RegisterValidatorsFromAssemblyContaining<AuthValidator>();
+                    opt.RegisterValidatorsFromAssemblyContaining<DocumentValidator>();
+                    opt.RegisterValidatorsFromAssemblyContaining<VacationValidator>();
                 });
 
             services.AddTransient<DataContext>();
-
             services.AddCors();
-            services.AddControllers();
             services.AddApiVersioning();
 
             // configure strongly typed settings objects
@@ -110,7 +112,7 @@ namespace DelMazo.PointRecord.Service.Web
                 {
                     OnTokenValidated = context =>
                     {
-                        var userService = context.HttpContext.RequestServices.GetRequiredService<IReader>();
+                        var userService = context.HttpContext.RequestServices.GetRequiredService<IReadUser>();
                         var userId = context.Principal.Identity.Name;
                         var user = userService.GetUserByIdAsync(userId);
                         if (user == null)
@@ -133,13 +135,38 @@ namespace DelMazo.PointRecord.Service.Web
             });
 
             //Register Commands
-            services.AddMediatR(typeof(ReadAuthQuery).GetTypeInfo().Assembly);
-            services.AddMediatR(typeof(WritePunchClockCommand).GetTypeInfo().Assembly);
+            //services.AddMediatR(typeof(ReadAuthQuery).GetTypeInfo().Assembly);
+            //services.AddMediatR(typeof(WritePunchClockCommand).GetTypeInfo().Assembly);
+
+            //services.AddMediatR(typeof(ReadAuthQuery).GetTypeInfo().Assembly);
+            //services.AddMediatR(typeof(ReadRolesQuery).GetTypeInfo().Assembly);
+            //services.AddMediatR(typeof(ReadUsersQuery).GetTypeInfo().Assembly);
+            //services.AddMediatR(typeof(ReadUserByIdQuery).GetTypeInfo().Assembly);
+            //services.AddMediatR(typeof(ReadUserByDocumentQuery).GetTypeInfo().Assembly);
+            //services.AddMediatR(typeof(ReadVacationQuery).GetTypeInfo().Assembly);
+            //services.AddMediatR(typeof(WriteAuthResetCommand).GetTypeInfo().Assembly);
+            //services.AddMediatR(typeof(WritePunchClockCommand).GetTypeInfo().Assembly);
+            //services.AddMediatR(typeof(ReadAuth).GetTypeInfo().Assembly);
+            //services.AddMediatR(typeof(ReadAuth).GetTypeInfo().Assembly);
+            //services.AddMediatR(typeof(ReadAuth).GetTypeInfo().Assembly);
+            //services.AddMediatR(typeof(ReadAuth).GetTypeInfo().Assembly);
+            //services.AddMediatR(typeof(ReadAuth).GetTypeInfo().Assembly);
 
             //Register Handlers
-            services.AddTransient<IReader, Reader>();
-            services.AddTransient<IWrite, Write>();
-            services.AddTransient<IRemove, Remove>();
+            services.AddTransient<IReadAuth, ReadAuth>();
+            services.AddTransient<IReadUser, ReadUser>();
+            services.AddTransient<IReadRole, ReadRole>();
+            services.AddTransient<IReadVacation, ReadVacation>();
+
+            services.AddTransient<IRemoveUser, RemoveUser>();
+            services.AddTransient<IRemoveRole, RemoveRole>();
+            services.AddTransient<IRemoveVacation, RemoveVacation>();
+
+            services.AddTransient<IWriteAuth, WriteAuth>();
+            services.AddTransient<IWriteRole, WriteRole>();
+            services.AddTransient<IWriteUser, WriteUser>();
+            services.AddTransient<IWritePunchClock, WritePunchClock>();
+            services.AddTransient<IWriteVacation, WriteVacation>();
 
             //Logger
             services.AddLogging(loggingBuilder =>
@@ -149,15 +176,21 @@ namespace DelMazo.PointRecord.Service.Web
                 loggingBuilder.AddDebug();
             });
 
+            //Mediator
+            var assembly = AppDomain.CurrentDomain.Load("DelMazo.PointRecord.Service.Application");
+            services.AddMediatR(assembly);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            loggerFactory.AddFile("Logs/application-{Date}.txt");
 
             // Ativando middlewares para uso do Swagger
             app.UseSwagger();

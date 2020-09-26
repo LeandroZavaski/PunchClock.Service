@@ -1,8 +1,8 @@
-﻿using DelMazo.PointRecord.Service.Domain.Entities;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
+using PunchClock.Service.Domain.Entities;
 
-namespace DelMazo.PointRecord.Service.Web.ApiModels.v1.PointRecords.Request
+namespace PunchClock.Service.Web.ApiModels.v1.PointRecords.Request
 {
     public class AuthRequest
     {

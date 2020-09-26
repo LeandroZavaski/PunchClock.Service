@@ -1,8 +1,8 @@
-﻿using DelMazo.PointRecord.Service.Domain.Entities;
-using DelMazo.PointRecord.Service.Persistence.Entities;
-using MediatR;
+﻿using MediatR;
+using PunchClock.Service.Domain.Entities;
+using PunchClock.Service.Persistence.Entities;
 
-namespace DelMazo.PointRecord.Service.Application.Querys.PointRecord
+namespace PunchClock.Service.Application.Querys.PointRecord
 {
     public class ReadAuthQuery : IRequest<AuthResponse>
     {
