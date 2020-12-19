@@ -177,7 +177,7 @@ namespace PunchClock.Service.Web
             });
 
             //Mediator
-            var assembly = AppDomain.CurrentDomain.Load("DelMazo.PointRecord.Service.Application");
+            var assembly = AppDomain.CurrentDomain.Load("PunchClock.Service.Application");
             services.AddMediatR(assembly);
 
         }

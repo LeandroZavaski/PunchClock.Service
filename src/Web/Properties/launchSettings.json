@@ -24,8 +24,9 @@
       "publishAllPorts": true,
       "useSSL": true
     },
-    "DelMazo.PointRecord.Service.Web": {
+    "PunchClock.Service.Web": {
       "commandName": "Project",
+      "launchBrowser": true,
       "launchUrl": "swagger/index.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
